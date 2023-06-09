@@ -115,8 +115,9 @@ contract Collection is TIP4_2Collection, TIP4_3Collection, OwnableExternal {
   function mintGameNft(uint256 gameId, uint256 seed) external virtual {
     require(msg.value > _mintFee + _remainOnNft + 0.1 ton, value_is_less_than_required);
     require(gameInfoMap[gameId].id != 0, game_id_does_not_exist);
+    // @todo use block.timestamp when block.timestamp starts working correctly
     require(
-      gameInfoMap[gameId].startTimestamp <= block.timestamp && block.timestamp <= gameInfoMap[gameId].endTimestamp,
+      gameInfoMap[gameId].startTimestamp <= now && now <= gameInfoMap[gameId].endTimestamp,
       game_cannot_be_minted
     );
 

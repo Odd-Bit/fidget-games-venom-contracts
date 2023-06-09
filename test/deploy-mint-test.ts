@@ -4,6 +4,7 @@ import { Address, Contract, WalletTypes, getRandomNonce, lockliftChai, toNano } 
 import * as nt from "nekoton-wasm";
 
 import { FactorySource } from "../build/factorySource";
+import exp from "constants";
 
 let collection: Contract<FactorySource["Collection"]>;
 let owner: Account;
@@ -101,14 +102,16 @@ describe("Test NFT Collection deployment and NFT minting", async function () {
 
   it(`should add new game info`, async function () {
     this.timeout(60000);
-    await collection.methods
-      .addNewGameInfo({
-        gameInfo: {
-          id: "0x080ecd63",
-          startTimestamp: Math.floor(Date.now() / 1000),
-          endTimestamp: Math.floor((Date.now() + 24 * 60 * 60 * 1000) / 1000),
-        },
-        json: `{
+
+    const { traceTree } = await locklift.tracing.trace(
+      collection.methods
+        .addNewGameInfo({
+          gameInfo: {
+            id: "0x080ecd63",
+            startTimestamp: Math.floor(Date.now() / 1000),
+            endTimestamp: Math.floor((Date.now() + 24 * 60 * 60 * 1000) / 1000),
+          },
+          json: `{
             "type": "Basic NFT",
             "name": "Tetris Jump",
             "description": "Tetris seems harmless doesn't it? Well its not that for our innocent little block.",
@@ -123,19 +126,20 @@ describe("Test NFT Collection deployment and NFT minting", async function () {
                   }
               ]
           }`,
-      })
-      .send({ from: owner.address, amount: toNano(0.3) });
+        })
+        .sendExternal({ publicKey: ownerKeys.publicKey }),
+    );
+    // await traceTree?.beautyPrint();
   });
 
   it(`should get game info`, async function () {
     this.timeout(60000);
-    const gameInfo = await collection.methods
+    const { value0: gameInfo } = await collection.methods
       .getGameInfo({
-        gameId: 0x080ecd63,
+        gameId: "0x080ecd63",
       })
       .call();
-    console.log(gameInfo);
-    expect(gameInfo.id).equal("0x080ecd63", "Game id should be 0x080ecd63");
+    expect(BigInt(gameInfo.id).toString(16)).equal("80ecd63", "Game id should be 0x080ecd63");
   });
 
   it(`should not mint nft for incorrect id`, async function () {
@@ -147,23 +151,22 @@ describe("Test NFT Collection deployment and NFT minting", async function () {
         seed: getRandomNonce(),
       })
       .send({ from: owner.address, amount: locklift.utils.toNano(0.3), bounce: true });
-
     const { count: id } = await collection.methods.totalSupply({ answerId: 0 }).call();
-
-    const { nft: nftAddress } = await collection.methods.nftAddress({ answerId: 0, id: id }).call();
-
     expect(id).equal("0", "NFT id should be 0");
   });
 
   it(`should mint 1st nft with correct game id`, async function () {
     this.timeout(60000);
     // call mintNft function
-    await collection.methods
-      .mintGameNft({
-        gameId: "0x080ecd63",
-        seed: getRandomNonce(),
-      })
-      .send({ from: owner.address, amount: locklift.utils.toNano(1), bounce: true });
+    const { traceTree } = await locklift.tracing.trace(
+      collection.methods
+        .mintGameNft({
+          gameId: "0x080ecd63",
+          seed: getRandomNonce(),
+        })
+        .send({ from: owner.address, amount: locklift.utils.toNano(1), bounce: true }),
+    );
+    // await traceTree?.beautyPrint();
     const { count: id } = await collection.methods.totalSupply({ answerId: 0 }).call();
 
     const { nft: nftAddress } = await collection.methods.nftAddress({ answerId: 0, id: id }).call();
