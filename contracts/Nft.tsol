@@ -1,0 +1,82 @@
+// ItGold.io Contracts (v1.0.0)
+pragma ton-solidity =0.58.1;
+
+pragma AbiHeader expire;
+pragma AbiHeader time;
+pragma AbiHeader pubkey;
+
+import "@itgold/everscale-tip/contracts/TIP4_2/TIP4_2Nft.sol";
+import "@itgold/everscale-tip/contracts/TIP4_3/TIP4_3Nft.sol";
+import "./Collection.tsol";
+
+// @todo
+// - transfer max 5% of sale or 0.1 ton (whichever is greater) to the collection
+// - store game id, game name, game mint time, game seed to nft contract
+// -
+contract Nft is TIP4_2Nft, TIP4_3Nft {
+  Collection.GameInfo _game;
+  uint256 _seed;
+
+  constructor(
+    address owner,
+    address sendGasTo,
+    uint128 remainOnNft,
+    string json,
+    Collection.GameInfo game,
+    uint256 seed,
+    uint128 indexDeployValue,
+    uint128 indexDestroyValue,
+    TvmCell codeIndex
+  )
+    public
+    TIP4_1Nft(owner, sendGasTo, remainOnNft)
+    TIP4_2Nft(json)
+    TIP4_3Nft(indexDeployValue, indexDestroyValue, codeIndex)
+  {
+    _game = game;
+    _seed = seed;
+    tvm.accept();
+  }
+
+  function getGameInfo() public view returns (Collection.GameInfo) {
+    return _game;
+  }
+
+  function getSeed() public view returns (uint256) {
+    return _seed;
+  }
+
+  function _beforeTransfer(
+    address to,
+    address sendGasTo,
+    mapping(address => CallbackParams) callbacks
+  ) internal virtual override(TIP4_1Nft, TIP4_3Nft) {
+    TIP4_3Nft._beforeTransfer(to, sendGasTo, callbacks);
+  }
+
+  function _afterTransfer(
+    address to,
+    address sendGasTo,
+    mapping(address => CallbackParams) callbacks
+  ) internal virtual override(TIP4_1Nft, TIP4_3Nft) {
+    TIP4_3Nft._afterTransfer(to, sendGasTo, callbacks);
+  }
+
+  function _beforeChangeOwner(
+    address oldOwner,
+    address newOwner,
+    address sendGasTo,
+    mapping(address => CallbackParams) callbacks
+  ) internal virtual override(TIP4_1Nft, TIP4_3Nft) {
+    TIP4_3Nft._beforeChangeOwner(oldOwner, newOwner, sendGasTo, callbacks);
+  }
+
+  function _afterChangeOwner(
+    address oldOwner,
+    address newOwner,
+    address sendGasTo,
+    mapping(address => CallbackParams) callbacks
+  ) internal virtual override(TIP4_1Nft, TIP4_3Nft) {
+    TIP4_3Nft._afterChangeOwner(oldOwner, newOwner, sendGasTo, callbacks);
+  }
+}

@@ -1,0 +1,160 @@
+pragma ton-solidity =0.58.1;
+
+pragma AbiHeader expire;
+pragma AbiHeader time;
+pragma AbiHeader pubkey;
+
+import "@itgold/everscale-tip/contracts/TIP4_2/TIP4_2Collection.sol";
+import "@itgold/everscale-tip/contracts/TIP4_3/TIP4_3Collection.sol";
+import "@itgold/everscale-tip/contracts/access/OwnableExternal.sol";
+import "./Nft.tsol";
+
+// @todo
+// 1. method to set gamelist with game id and game timestamp and game screenshot
+// 2. before minting, verify game in game list, verify id, verify timestamp, verify owner signature
+// 3. generate game json with game id, game timestamp, game screenshot and game seed signed by owner
+// 4. check if transferred amount is > mint price + 0.1 ton
+// 5. transfer collected fees to dao address
+
+contract Collection is TIP4_2Collection, TIP4_3Collection, OwnableExternal {
+  /**
+   * Errors
+   **/
+  uint8 constant sender_is_not_owner = 101;
+  uint8 constant value_is_less_than_required = 102;
+  uint8 constant game_id_cannot_be_0 = 103;
+  uint8 constant game_id_already_exists = 104;
+  uint8 constant game_id_does_not_exist = 105;
+  uint8 constant game_cannot_be_minted = 106;
+
+  /// _remainOnNft - the number of crystals that will remain after the entire mint
+  /// process is completed on the Nft contract
+  uint128 _remainOnNft = 0.3 ton;
+
+  struct GameInfo {
+    uint256 id;
+    uint128 startTimestamp;
+    uint128 endTimestamp;
+  }
+  struct MintRequest {
+    uint256 requestId;
+    address addressTo;
+    uint256 gameId;
+    uint256 seed;
+  }
+  // All games
+  mapping(uint256 => GameInfo) gameInfoMap;
+  mapping(uint256 => string) gameJsonMap;
+
+  uint256 _mintFee = 0.3 ton;
+
+  constructor(
+    TvmCell codeNft,
+    uint256 ownerPubkey,
+    string json,
+    TvmCell codeIndex,
+    TvmCell codeIndexBasis
+  )
+    public
+    OwnableExternal(ownerPubkey)
+    TIP4_1Collection(codeNft)
+    TIP4_2Collection(json)
+    TIP4_3Collection(codeIndex, codeIndexBasis)
+  {
+    tvm.accept();
+  }
+
+  // The helper function to encode a MintRequest to a TvmSlice
+  function encodeMintRequest(MintRequest request) internal pure returns (TvmSlice) {
+    TvmBuilder builder;
+    builder.store(request.requestId, request.addressTo, request.gameId, request.seed);
+    return builder.toCell().toSlice();
+  }
+
+  // The helper function to decode a MintRequest from a TvmSlice
+  function decodeMintRequest(TvmSlice slice) internal pure returns (MintRequest) {
+    (address addressTo, uint256 requestId, uint256 gameId, uint256 seed) = slice.decode(
+      address,
+      uint256,
+      uint256,
+      uint256
+    );
+    return MintRequest({ requestId: requestId, addressTo: addressTo, gameId: gameId, seed: seed });
+  }
+
+  // The helper function to check if the Fidget DAO has signed the mint request
+  function verifyDataSignature(MintRequest mintRequest, string signature) public returns (bool) {
+    TvmSlice data = encodeMintRequest(mintRequest);
+    TvmBuilder signatureBuilder;
+    signatureBuilder.store(signature);
+    bool signatureIsValid = tvm.checkSign(data, signatureBuilder.toCell().toSlice(), OwnableExternal.owner());
+    return signatureIsValid;
+  }
+
+  function addNewGameInfo(GameInfo gameInfo, string json) external onlyOwner {
+    require(gameInfo.id != 0, game_id_cannot_be_0);
+    require(gameInfoMap[gameInfo.id].id == 0, game_id_already_exists);
+
+    gameInfoMap[gameInfo.id] = gameInfo;
+    gameJsonMap[gameInfo.id] = json;
+  }
+
+  function getGameInfo(uint256 gameId) public view returns (GameInfo) {
+    return gameInfoMap[gameId];
+  }
+
+  function updateGameJson(uint256 gameId, string json) external onlyOwner {
+    require(gameInfoMap[gameId].id != 0, game_id_does_not_exist);
+    gameJsonMap[gameId] = json;
+  }
+
+  function getGameJson(uint256 gameId) public view returns (string) {
+    return gameJsonMap[gameId];
+  }
+
+  function mintGameNft(uint256 gameId, uint256 seed) external virtual {
+    require(msg.value > _mintFee + _remainOnNft + 0.1 ton, value_is_less_than_required);
+    require(gameInfoMap[gameId].id != 0, game_id_does_not_exist);
+    require(
+      gameInfoMap[gameId].startTimestamp <= block.timestamp && block.timestamp <= gameInfoMap[gameId].endTimestamp,
+      game_cannot_be_minted
+    );
+
+    tvm.rawReserve(0, 4);
+
+    uint256 id = uint256(_totalSupply);
+    _totalSupply++;
+
+    TvmCell codeNft = _buildNftCode(address(this));
+    TvmCell stateNft = _buildNftState(codeNft, id);
+    address nftAddr = new Nft{ stateInit: stateNft, value: 0, flag: 128 }(
+      msg.sender,
+      msg.sender,
+      _remainOnNft,
+      gameJsonMap[gameId],
+      gameInfoMap[gameId],
+      seed,
+      _indexDeployValue,
+      _indexDestroyValue,
+      _codeIndex
+    );
+
+    emit NftCreated(id, nftAddr, msg.sender, msg.sender, msg.sender);
+  }
+
+  function setRemainOnNft(uint128 remainOnNft) external virtual onlyOwner {
+    require(TIP4_1Collection._isOwner(), sender_is_not_owner);
+    _remainOnNft = remainOnNft;
+  }
+
+  function _isOwner() internal override onlyOwner returns (bool) {
+    return true;
+  }
+
+  function _buildNftState(
+    TvmCell code,
+    uint256 id
+  ) internal pure virtual override(TIP4_2Collection, TIP4_3Collection) returns (TvmCell) {
+    return tvm.buildStateInit({ contr: Nft, varInit: { _id: id }, code: code });
+  }
+}
