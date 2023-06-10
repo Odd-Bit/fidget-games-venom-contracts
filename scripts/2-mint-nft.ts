@@ -22,21 +22,16 @@ async function main() {
       secretKey: process.env.MY_PRIVATE_KEY || "",
     };
     locklift.keystore.addKeyPair(keyPair);
-    const { account: someAccount } = await locklift.factory.accounts.addNewAccount({
-      type: WalletTypes.WalletV3,
-      value: toNano(10),
-      publicKey: keyPair.publicKey,
-    });
 
     // get current nft id (totalSupply) for future NFT address calculating
     const { count: id } = await collectionInstance.methods.totalSupply({ answerId: 0 }).call();
     spinner.succeed(`id: ${id}`);
     await collectionInstance.methods
       .mintGameNft({
-        gameId: "0x080ecd63",
+        gameId: "0xd4fda1b5",
         seed: getRandomNonce(),
       })
-      .send({ from: someAccount.address, amount: toNano(2) });
+      .send({ from: new Address(process.env.MY_ADDRESS || ""), amount: toNano(1.3) });
 
     const { nft: nftAddress } = await collectionInstance.methods.nftAddress({ answerId: 0, id: id }).call();
     console.log("Total Supply: ", await collectionInstance.methods.totalSupply({ answerId: 0 }).call());

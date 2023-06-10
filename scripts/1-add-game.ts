@@ -3,6 +3,25 @@ import { Address, toNano, WalletTypes } from "locklift";
 import ora from "ora";
 import prompts from "prompts";
 
+const games = [
+  {
+    description:
+      "Tired is our celestial centipede, from living inside the cracks of walls. Steer it towards the blue shimmer and avoid the blood thirsty lice.",
+    id: "2cc1ebc6",
+    name: "Frame Shooter",
+    preview:
+      "https://firebasestorage.googleapis.com/v0/b/fidget-f6a9f.appspot.com/o/gameImages%2F2cc1ebc6-large.jpeg?alt=media",
+  },
+  {
+    id: "d4fda1b5",
+    name: "Notebook Shooter",
+    preview:
+      "https://firebasestorage.googleapis.com/v0/b/fidget-f6a9f.appspot.com/o/gameImages%2Fd4fda1b5-large.jpeg?alt=media",
+    thumbnail:
+      "https://firebasestorage.googleapis.com/v0/b/fidget-f6a9f.appspot.com/o/gameImages%2Fd4fda1b5-sm.jpeg?alt=media",
+    description: "Steer the doodle tank and get rid of the bullying bombs that have invaded your notebook. ",
+  },
+];
 async function main() {
   const spinner = ora();
   const answers = await prompts([
@@ -22,35 +41,44 @@ async function main() {
       secretKey: process.env.MY_PRIVATE_KEY || "",
     };
     locklift.keystore.addKeyPair(keyPair);
-    const { account: someAccount } = await locklift.factory.accounts.addNewAccount({
-      type: WalletTypes.WalletV3,
-      value: toNano(10),
-      publicKey: keyPair.publicKey,
-    });
-    await collectionInstance.methods
-      .addNewGameInfo({
-        gameInfo: {
-          id: "0x080ecd63",
-          startTimestamp: Date.now(),
-          endTimestamp: Date.now() + 24 * 60 * 60 * 1000,
-        },
-        json: `{
-            "type": "Basic NFT",
-            "name": "Tetris Jump",
-            "description": "Tetris seems harmless doesn't it? Well its not that for our innocent little block.",
-              "preview": {
-                  "source": "https://firebasestorage.googleapis.com/v0/b/fidget-f6a9f.appspot.com/o/gameImages%2F080ecd63-large.jpeg?alt=media",
-                  "mimetype": "image/jpeg"
+    for (let idx in games) {
+      const game = games[idx];
+      console.log(game);
+      await collectionInstance.methods
+        .addNewGameInfo({
+          gameInfo: {
+            id: `0x${game.id}`,
+            startTimestamp: Math.floor(Date.now() / 1000),
+            endTimestamp: Math.floor((Date.now() + 10 * 24 * 60 * 60 * 1000) / 1000),
+          },
+          json: JSON.stringify(
+            {
+              type: "Basic NFT",
+              name: game.name,
+              description: game.description,
+              preview: {
+                source: game.preview,
+                mimetype: "image/jpeg",
               },
-              "files": [
-                  {
-                      "source": "https://firebasestorage.googleapis.com/v0/b/fidget-f6a9f.appspot.com/o/gameImages%2F080ecd63-large.jpeg?alt=media",
-                      "mimetype": "image/jpeg"
-                  }
-              ]
-          }`,
-      })
-      .send({ from: someAccount.address, amount: toNano(0.3) });
+              files: [
+                {
+                  source: game.preview,
+                  mimetype: "image/jpeg",
+                },
+              ],
+            },
+            null,
+            2,
+          ),
+        })
+        .sendExternal({ publicKey: keyPair.publicKey });
+      const { value0: gameInfo } = await collectionInstance.methods
+        .getGameInfo({
+          gameId: `0x${game.id}`,
+        })
+        .call();
+      console.log(gameInfo);
+    }
   } catch (err) {
     spinner.fail(`Failed`);
     console.log(err);
