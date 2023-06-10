@@ -9,13 +9,6 @@ import "@itgold/everscale-tip/contracts/TIP4_3/TIP4_3Collection.sol";
 import "@itgold/everscale-tip/contracts/access/OwnableExternal.sol";
 import "./Nft.tsol";
 
-// @todo
-// 1. method to set gamelist with game id and game timestamp and game screenshot
-// 2. before minting, verify game in game list, verify id, verify timestamp, verify owner signature
-// 3. generate game json with game id, game timestamp, game screenshot and game seed signed by owner
-// 4. check if transferred amount is > mint price + 0.1 ton
-// 5. transfer collected fees to dao address
-
 contract Collection is TIP4_2Collection, TIP4_3Collection, OwnableExternal {
   /**
    * Errors

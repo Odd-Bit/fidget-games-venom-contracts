@@ -8,10 +8,6 @@ import "@itgold/everscale-tip/contracts/TIP4_2/TIP4_2Nft.sol";
 import "@itgold/everscale-tip/contracts/TIP4_3/TIP4_3Nft.sol";
 import "./Collection.tsol";
 
-// @todo
-// - transfer max 5% of sale or 0.1 ton (whichever is greater) to the collection
-// - store game id, game name, game mint time, game seed to nft contract
-// -
 contract Nft is TIP4_2Nft, TIP4_3Nft {
   Collection.GameInfo _game;
   uint256 _seed;
