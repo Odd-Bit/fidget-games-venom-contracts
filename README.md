@@ -2,10 +2,77 @@ Fidget Games
 
 # About the project
 
-- only owner can add new games
-- minting and burning NFTs
-- transferring NFTs from one account to another
-- selling your NFTs
+Mission: Bringing gaming nostalgia through daily mini-games and NFT ownership.
+
+Vision: Become marketplace for **ALL** games.
+
+## The Team
+
+Manish - CTO, gamer
+
+Raunak - senior developer, gamer
+
+Gokul - business developer, gamer
+
+## The Problem
+
+> Market consensus "the next wave of web3 adoption will happen through gaming", as observed in major blockchains pivoting to this sector
+
+Gaming can be approached in two ways: AAA and casual,
+
+**AAA games**, such as CS: GO and Minecraft, have a dedicated audience of **hardcore gamers**, making it unrealistic to expect widespread adoption among the general public in the web3 space
+
+**Casual games** are more commonly played by the average person, but they face a challenge of **low player retention**. Casual gamers tend to quickly move on from one game to the next after experiencing initial excitement
+
+Tokenomics, gameplay, play-to-earn, NFTs by themselves do not guarantee an ideal user base
+
+## The Opportunity
+
+> Global mobile gaming sector market cap is $138 billion, with 2.3 billion players as of 2023 - estimated to increase by 400 million by 2027
+
+> MENA constitutes 15% of the global player base, and is predicted to generate double the revenue by 2026 compared to $3 billion in 2021
+
+These fact motivated us to focus on transforming the gaming experience for the people, and facilitate true ownership of games and game assets.
+
+## The Solution
+
+> _Fidget Games_, play one new game every day.
+
+1. Single app with a new game every day, without having to update the app or download from the store
+
+2. In-house game development team creates fantastic games with following things at the core:
+
+- low complexity
+- new mechanics
+- unique artwork
+- game for everyone
+- infinite levels
+
+3. 24-hour shelf life, so users will have to purchase the game
+
+- limited time to decide
+- engaging gameplay
+- extended playability
+- orginial designs
+
+> Users will feel at home, enjoying new games from the comfort of Fidget Games app
+
+![user experience|200x200](https://github.com/XogZ3/fidget-description/raw/main/assets/summary.jpg)
+
+### Games
+
+Our mini-games are fun, relaxing and addictive.
+
+![game 1](./docs/assets/game_1.mp4)
+![game 2](./docs/assets/game_2.mp4)
+![game 3](./docs/assets/game_3.mp4)
+![game 4](./docs/assets/game_4.mp4)
+
+### Venom
+
+> We have chosen Venom Blockchain, to explore its fast transaction speeds and infinite scalability
+
+With the recent launch of Venom, as the blockchain gears up for mass adoption, there is a high growth potential that will mutually benefit both Fidget Games and Venom, as we strive to achieve a similar goal, to enable the next wave of web3.
 
 # Table of Contents
 
