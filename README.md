@@ -1,4 +1,4 @@
-Fidget Games
+iFidget Games
 
 # About the project
 
@@ -14,7 +14,7 @@ Raunak - senior developer, gamer
 
 Gokul - business developer, gamer
 
-## The Problem
+## The Inspiration
 
 > Market consensus "the next wave of web3 adoption will happen through gaming", as observed in major blockchains pivoting to this sector
 
@@ -26,14 +26,6 @@ Gaming can be approached in two ways: AAA and casual,
 
 Tokenomics, gameplay, play-to-earn, NFTs by themselves do not guarantee an ideal user base
 
-## The Opportunity
-
-> Global mobile gaming sector market cap is $138 billion, with 2.3 billion players as of 2023 - estimated to increase by 400 million by 2027
-
-> MENA constitutes 15% of the global player base, and is predicted to generate double the revenue by 2026 compared to $3 billion in 2021
-
-These fact motivated us to focus on transforming the gaming experience for the people, and facilitate true ownership of games and game assets.
-
 ## The Solution
 
 > _Fidget Games_, play one new game every day.
@@ -42,31 +34,48 @@ These fact motivated us to focus on transforming the gaming experience for the p
 
 2. In-house game development team creates fantastic games with following things at the core:
 
-- low complexity
-- new mechanics
-- unique artwork
-- game for everyone
-- infinite levels
+   - low complexity
+   - new mechanics
+   - unique artwork
+   - game for everyone
+   - infinite levels
 
 3. 24-hour shelf life, so users will have to purchase the game
 
-- limited time to decide
-- engaging gameplay
-- extended playability
-- orginial designs
+   - limited time to decide
+   - engaging gameplay
+   - extended playability
+   - orginial designs
 
 > Users will feel at home, enjoying new games from the comfort of Fidget Games app
 
-![user experience|200x200](https://github.com/XogZ3/fidget-description/raw/main/assets/summary.jpg)
+<img src="./docs/assets/user%20flow.jpg" width="300" alt="user flow"></img>
+
+### True Potential
+
+> Our success would mean we become an **alternative distribution & monetization platform**
+
+Game developers can break free from their dependency on playstore / appstore / steam, given that we will have built the ecosystem & user base.
 
 ### Games
 
-Our mini-games are fun, relaxing and addictive.
+Our team creates games that are fun, relaxing and addictive.
 
-![game 1](./docs/assets/game_1.mp4)
-![game 2](./docs/assets/game_2.mp4)
-![game 3](./docs/assets/game_3.mp4)
-![game 4](./docs/assets/game_4.mp4)
+<video width="130" height="240" controls>
+  <source src="./docs/assets/game_1.mp4" type="video/mp4">
+</video>
+
+<video width="130" height="240" controls>
+  <source src="./docs/assets/game_2.mp4" type="video/mp4">
+</video>
+
+## The Opportunity
+
+> Global mobile gaming sector market cap is $138 billion, with 2.3 billion players as of 2023 - estimated to increase by 400 million by 2027
+
+> MENA constitutes 15% of the global player base, and is predicted to generate double the revenue by 2026 compared to $3 billion in 2021
+
+These fact motivated us to focus on transforming the gaming experience for the people, and facilitate true ownership of games and game assets.
 
 ### Venom
 
