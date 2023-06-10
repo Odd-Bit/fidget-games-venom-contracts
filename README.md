@@ -1,4 +1,4 @@
-iFidget Games
+Fidget Games
 
 # About the project
 
@@ -45,7 +45,7 @@ Tokenomics, gameplay, play-to-earn, NFTs by themselves do not guarantee an ideal
    - limited time to decide
    - engaging gameplay
    - extended playability
-   - orginal designs
+   - original designs
 
 > Users will feel at home, enjoying new games from the comfort of Fidget Games app
 
