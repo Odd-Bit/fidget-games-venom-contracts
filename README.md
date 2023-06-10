@@ -45,7 +45,7 @@ Tokenomics, gameplay, play-to-earn, NFTs by themselves do not guarantee an ideal
    - limited time to decide
    - engaging gameplay
    - extended playability
-   - orginial designs
+   - orginal designs
 
 > Users will feel at home, enjoying new games from the comfort of Fidget Games app
 
@@ -61,13 +61,9 @@ Game developers can break free from their dependency on playstore / appstore / s
 
 Our team creates games that are fun, relaxing and addictive.
 
-<video width="130" height="240" controls>
-  <source src="./docs/assets/game_1.mp4" type="video/mp4">
-</video>
+[<img src="./docs/assets/game1.png" width="120">](https://www.youtube.com/watch?v=tmioBkAHiTk "Game 1")
 
-<video width="130" height="240" controls>
-  <source src="./docs/assets/game_2.mp4" type="video/mp4">
-</video>
+[<img src="./docs/assets/game2.png" width="120">](https://www.youtube.com/watch?v=aOiMiEk33Wc "Game 2")
 
 ## The Opportunity
 
